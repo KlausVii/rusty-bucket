@@ -6,7 +6,7 @@ use rand::Rng;
 extern crate rand;
 
 fn main() {
-    let (tx, rx) = mpsc::channel();
+    let (tx, rx) = mpsc::channel::<i32>();
 
     for i in 0..10 {
         let tx = tx.clone();
@@ -16,7 +16,10 @@ fn main() {
             while true {
                 thread::sleep(Duration::new(rand::thread_rng().gen_range(0, 10), 0));
                 let answer = i * i;
-                tx.send(answer).unwrap();
+                match tx.send(answer) {
+                    Ok(_) => println!("send ok"),
+                    Err(e) => println!("send failed: {}", e),
+                }
             }
         });
     }

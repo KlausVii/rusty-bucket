@@ -7,7 +7,6 @@ extern crate time;
 extern crate rand;
 
 fn main() {
-
     let n = 10000000;
 
     let par_start = PreciseTime::now();
@@ -22,42 +21,42 @@ fn main() {
     println!("{} seconds for single thread e {}", start.to(end), res);
 }
 
-fn euler_maker(sample_size: i32) -> f64 {
-    let mut results = Vec::<i64>::new();
-    for i in 0..sample_size {
-        results.push(random_to_1())
+fn euler_maker(sample_size: u64) -> f64 {
+    let mut results: u64 = 0;
+    for _i in 0..sample_size {
+        results += random_to_1()
     }
-    (results.iter().sum::<i64>() as f64) / (results.len() as f64)
+    (results as f64) / (sample_size as f64)
 }
 
-fn euler_maker_par(sample_size: i32) -> f64 {
-    let (tx, rx) = mpsc::channel::<i64>();
-    for i in 0..4 {
+fn euler_maker_par(sample_size: u64) -> f64 {
+    let (tx, rx) = mpsc::channel::<u64>();
+    let n_threads = 4;
+    let sample_frac = sample_size / n_threads;
+    for _i in 0..n_threads {
         let tx = tx.clone();
         thread::spawn(move || {
-            while true {
+            for _j in 0..sample_frac {
                 let answer = random_to_1();
                 match tx.send(answer) {
-                    Err(e) => {
+                    Err(_) => {
                         return;
-                    },
+                    }
                     Ok(_) => (),
                 }
             }
         });
     }
-    let mut results = Vec::<i64>::new();
-    while results.len() < sample_size as usize {
-        results.push(rx.recv().unwrap());
-    }
-   (results.iter().sum::<i64>() as f64) / (results.len() as f64)
+    drop(tx);
+    let sum = rx.iter().sum::<u64>();
+    (sum as f64) / (sample_size as f64)
 }
 
-fn random_to_1() -> i64 {
+fn random_to_1() -> u64 {
     let mut x = 0.0;
     let mut n = 0;
     while x < 1.0 {
-        let r = random::<Closed01<f64>>().0;
+        let Closed01(r) = random::<Closed01<f64>>();
         x = x + r;
         n += 1
     }

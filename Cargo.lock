@@ -4,6 +4,13 @@ version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "euler"
+version = "0.1.0"
+dependencies = [
+ "rand 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "fuchsia-zircon"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -41,7 +48,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "rusty-sync"
 version = "0.1.0"
 dependencies = [
- "rand 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "euler 0.1.0",
  "time 0.1.39 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

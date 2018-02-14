@@ -2,7 +2,7 @@ extern crate rand;
 
 use std::thread;
 use std::sync::mpsc;
-use self::rand::{random, Closed01};
+use rand::{random, Closed01};
 
 
 pub fn euler_maker(sample_size: u64) -> f64 {
